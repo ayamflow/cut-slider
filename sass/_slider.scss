@@ -9,7 +9,7 @@
     padding: 0;
 }
 
-$slices-number: 6;
+$slices-number: 8;
 
 html, body {
     @extend %full-screen;
@@ -50,8 +50,12 @@ html, body {
 }
 
 .slide-deep {
-    width: 1680px;
+    width: 100%;
     height: 100%;
     position: absolute;
     top: 0;
+
+    img {
+        width: 100%;
+    }
 }
