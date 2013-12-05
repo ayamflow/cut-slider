@@ -6,7 +6,8 @@ $(document).ready(init);
  */
 
 var imageIndex = 0,
-    imagesUrl = ["img/news4.jpg", "img/news5.jpg"],
+    // imagesUrl = ["img/news4.jpg", "img/news5.jpg"],
+    imagesUrl = ["img/wall-statues.jpg", "img/wall-rock.jpg"],
     imagesNumber,
     slicesNumber = 8,
     transitionDuration = 0.6,
@@ -40,9 +41,10 @@ function kickIt() {
 function slideComplete(i) {
     $('.slide-deep.image' + Number(!imageIndex)).eq(i).remove();
 
-    // if(i == slicesNumber - 1) {
-        // setTimeout(kickIt, transitionDuration / 2);
-    // }
+    if(i == slicesNumber - 1) {
+        console.log('hey');
+        setTimeout(kickIt, transitionDuration * 1000);
+    }
 }
 
 function getNextImageUrl() {
@@ -69,9 +71,9 @@ function startTransition() {
 
         slideIndex = slicesNumber - i + 1;
         $slide = $wrapper.find('.slide' + slideIndex).find('.slide-deep.image' + Number(!imageIndex));
-        TweenMax.to($slide, transitionDuration, {x: i  * 100 / slicesNumber + 2000 , delay: delay, onComplete: slideComplete, onCompleteParams: [slideIndex - 1], ease: Expo.easeIn});
+        TweenMax.to($slide, transitionDuration, {x: i  * 100 / slicesNumber + 2000 , delay: delay, ease: Expo.easeIn});
 
         $nextSlide = $wrapper.find('.slide' + slideIndex).find('.slide-deep.image' + imageIndex);
-        TweenMax.from($nextSlide, transitionDuration / 2, {x: 0, delay: delay + transitionDuration, ease: Expo.easeOut});
+        TweenMax.from($nextSlide, transitionDuration / 2, {x: 0, delay: delay + transitionDuration, ease: Expo.easeOut, onComplete: slideComplete, onCompleteParams: [slideIndex - 1]});
     }
 }
