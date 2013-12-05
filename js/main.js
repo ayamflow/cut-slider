@@ -3,6 +3,7 @@ $(document).ready(init);
 /* TODO
     - enable easy configuration (slicesNumber, duration, multiples images...)
     - Slide selector
+    - Sometimes the slices are not properly in sync
  */
 
 var imageIndex = 0,
