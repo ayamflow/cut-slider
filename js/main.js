@@ -1,11 +1,22 @@
 $(document).ready(init);
 
-var imageSwitch = 0,
-slicesNumber = 8,
-transitionDuration = 1;
+/* TODO
+    - enable easy configuration (slicesNumber, duration, multiples images...)
+    - Slide selector
+ */
+
+var imageIndex = 0,
+    imagesUrl = ["img/news4.jpg", "img/news5.jpg"],
+    imagesNumber,
+    slicesNumber = 8,
+    transitionDuration = 0.6,
+    $wrapper;
 
 function init() {
-    var $wrapper = $('#slider'), $medium, $slide;
+    var $medium, $slide;
+
+    $wrapper = $('#slider');
+    imagesNumber = imagesUrl.length;
 
     for(var i = 0; i < slicesNumber; i++) {
         $medium = $('<div class="slide-medium"></div>');
@@ -27,29 +38,23 @@ function kickIt() {
 }
 
 function slideComplete(i) {
-    $('.slide-deep.image' + Number(!imageSwitch)).eq(i).remove();
+    $('.slide-deep.image' + Number(!imageIndex)).eq(i).remove();
 
     // if(i == slicesNumber - 1) {
-    //     setTimeout(kickIt, 300);
+        // setTimeout(kickIt, transitionDuration / 2);
     // }
 }
 
 function getNextImageUrl() {
-    if(imageSwitch === 0) {
-        imageSwitch = 1;
-        return "img/wall-statues.jpg";
-    }
-    else {
-        imageSwitch = 0;
-        return "img/wall-rock.jpg";
-    }
+    imageIndex = Number(!imageIndex);
+    return imagesUrl[imageIndex];
 }
 
 function initNextImage(url) {
-    var $slides = $('.slide-medium'), $slide;
+    var $slides = $wrapper.find('.slide-medium'), $slide;
     for(var i = 0; i < $slides.length; i++) {
         $slide = $slides.eq(i);
-        var imageClass = "image" + imageSwitch;
+        var imageClass = "image" + imageIndex;
         var $deep = $('<div class="slide-deep ' + imageClass + '"></div>');
         var $image = $('<img src="' + url + '" />');
         $slide.prepend($deep);
@@ -60,15 +65,13 @@ function initNextImage(url) {
 function startTransition() {
     var i, slideIndex, $slide, $nextSlide, delay;
     for(i = slicesNumber; i > 0; i--) {
-        delay = i * transitionDuration / slicesNumber / 2;
+        delay = i * transitionDuration / slicesNumber / 3;
 
         slideIndex = slicesNumber - i + 1;
-        $slide = $('.slide' + slideIndex).find('.slide-deep.image' + Number(!imageSwitch));
-        TweenMax.to($slide, transitionDuration, {x: 2000, delay: delay, onComplete: slideComplete, onCompleteParams: [slideIndex - 1]});
+        $slide = $wrapper.find('.slide' + slideIndex).find('.slide-deep.image' + Number(!imageIndex));
+        TweenMax.to($slide, transitionDuration, {x: i  * 100 / slicesNumber + 2000 , delay: delay, onComplete: slideComplete, onCompleteParams: [slideIndex - 1], ease: Expo.easeIn});
 
-        delay += 0.1;
-
-        $nextSlide = $('.slide' + slideIndex).find('.slide-deep.image' + imageSwitch);
-        TweenMax.from($nextSlide, transitionDuration / 2, {x: 0, delay: delay});
+        $nextSlide = $wrapper.find('.slide' + slideIndex).find('.slide-deep.image' + imageIndex);
+        TweenMax.from($nextSlide, transitionDuration / 2, {x: 0, delay: delay + transitionDuration, ease: Expo.easeOut});
     }
 }
